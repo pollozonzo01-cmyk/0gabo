@@ -34,6 +34,10 @@ class MainActivity : Activity() {
     private lateinit var btnEspn: Button
     private lateinit var btnEspn2: Button
     private lateinit var btnEspn3: Button
+    private lateinit var btnEspn4: Button
+    private lateinit var btnEspn5: Button
+    private lateinit var btnEspn6: Button
+    private lateinit var btnEspn7: Button
     private lateinit var btnFoxSports: Button
     private lateinit var btnFoxSports2: Button
     private lateinit var btnFoxPremium: Button
@@ -102,6 +106,10 @@ class MainActivity : Activity() {
         btnEspn = findViewById(R.id.btn_espn)
         btnEspn2 = findViewById(R.id.btn_espn2)
         btnEspn3 = findViewById(R.id.btn_espn3)
+        btnEspn4 = findViewById(R.id.btn_espn4)
+        btnEspn5 = findViewById(R.id.btn_espn5)
+        btnEspn6 = findViewById(R.id.btn_espn6)
+        btnEspn7 = findViewById(R.id.btn_espn7)
         btnFoxSports = findViewById(R.id.btn_fox_sports)
         btnFoxSports2 = findViewById(R.id.btn_fox_sports2)
         btnFoxPremium = findViewById(R.id.btn_fox_premium)
@@ -125,9 +133,9 @@ class MainActivity : Activity() {
     private fun setupFavorites() {
         val buttons = listOf(
             btnHome, btnAztecaUno, btnAzteca7, btnCanal5, btnLasEstrellas, btnTudn,
-            btnEspn, btnEspn2, btnEspn3, btnFoxSports, btnFoxSports2, btnFoxPremium,
-            btnWinSports, btnWinSports2, btnDsports, btnDsports2, btnDsportsPlus,
-            btnDaznLaliga, btnMovistarCampeones
+            btnEspn, btnEspn2, btnEspn3, btnEspn4, btnEspn5, btnEspn6, btnEspn7,
+            btnFoxSports, btnFoxSports2, btnFoxPremium, btnWinSports, btnWinSports2,
+            btnDsports, btnDsports2, btnDsportsPlus, btnDaznLaliga, btnMovistarCampeones
         )
 
         fun selectFavorite(selectedButton: Button, url: String) {
@@ -150,6 +158,10 @@ class MainActivity : Activity() {
         btnEspn.setOnClickListener { selectFavorite(btnEspn, ESPN_URL) }
         btnEspn2.setOnClickListener { selectFavorite(btnEspn2, ESPN2_URL) }
         btnEspn3.setOnClickListener { selectFavorite(btnEspn3, ESPN3_URL) }
+        btnEspn4.setOnClickListener { selectFavorite(btnEspn4, ESPN4_URL) }
+        btnEspn5.setOnClickListener { selectFavorite(btnEspn5, ESPN5_URL) }
+        btnEspn6.setOnClickListener { selectFavorite(btnEspn6, ESPN6_URL) }
+        btnEspn7.setOnClickListener { selectFavorite(btnEspn7, ESPN7_URL) }
         btnFoxSports.setOnClickListener { selectFavorite(btnFoxSports, FOX_SPORTS_URL) }
         btnFoxSports2.setOnClickListener { selectFavorite(btnFoxSports2, FOX_SPORTS2_URL) }
         btnFoxPremium.setOnClickListener { selectFavorite(btnFoxPremium, FOX_PREMIUM_URL) }
@@ -272,11 +284,9 @@ class MainActivity : Activity() {
                         }
                     }
                     
-                    // Retornar una respuesta vacía para detener la carga de video dentro del WebView
                     return WebResourceResponse("text/plain", "UTF-8", ByteArrayInputStream(ByteArray(0)))
                 }
 
-                // Intentar bloquear anuncios de redes externas y redirecciones
                 AdBlocker.shouldBlock(url)?.let { return it }
                 
                 return super.shouldInterceptRequest(view, request)
@@ -418,6 +428,19 @@ class MainActivity : Activity() {
             })();
         """.trimIndent()
         view?.evaluateJavascript(js, null)
+    }
+
+    private fun clearPrivateData() {
+        CookieManager.getInstance().apply {
+            removeAllCookies(null)
+            flush()
+            setAcceptCookie(true)
+            setAcceptThirdPartyCookies(webView, false)
+        }
+        WebStorage.getInstance().deleteAllData()
+        webView.clearCache(true)
+        webView.clearHistory()
+        webView.clearFormData()
     }
 
     private fun setImmersiveMode() {
